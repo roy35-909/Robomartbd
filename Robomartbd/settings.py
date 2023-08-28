@@ -62,7 +62,9 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'https://api.robomartbd.com',
     'http://localhost:8000',
-    'https://robomartbd11.web.app'
+    'https://robomartbd11.web.app',
+    'http://localhost:3000',
+
 ]
 
 ROOT_URLCONF = 'Robomartbd.urls'

@@ -16,7 +16,7 @@ class GetCartProducts(APIView):
         except:
             cart = Cart(user=request.user,count=0,price=0)
             cart.save()
-            
+        # Need to Do Cart price validationnn...
         cart_ser = CartSerializerList(cart)
         return Response(cart_ser.data,status=status.HTTP_200_OK)
     
