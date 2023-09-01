@@ -8,6 +8,8 @@ from .serializers import *
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from cart.models import CartItem,Cart
+
+from Basic_Api.models import Cupon
 class GetOrder(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,format = None):
@@ -27,12 +29,22 @@ class GetOrder(APIView):
             return Response({'error':'Unvalid Body Please provide phone info ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
         if "address" not in data:
             return Response({'error':'Unvalid Body Please provide phone info ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        if "cupon" not in data:
+            return Response({'error':'Unvalid Body Please provide cupon info ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
 
         price = 0
         try:
             delevary = Delivary.objects.get(code=data['delevary'])
         except(ObjectDoesNotExist):
             return Response({'error':'Unvalid Delevary details'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        if data['cupon'] != None:
+            try:
+                copun = Cupon.objects.get(cupun_code=data['cupon'])
+            except(ObjectDoesNotExist):
+                return Response({'error':'Unvalid Copun Please cheak ..'},status=status.HTTP_404_NOT_FOUND)
+        else:
+            copun = None
         price+=delevary.price
         for i in data['items']:
             try:
@@ -64,14 +76,23 @@ class GetOrder(APIView):
                 cart.save()
                 cartitem.delete()
                 
-            
-            price+=(product.price*i['quantity'])
-            order_item = OrderItem(order=obj,product=product,quantity=i['quantity'])
+            item_price = product.price*i['quantity']
+            price+=item_price
+            order_item = OrderItem(order=obj,product=product,quantity=i['quantity'],price =item_price )
             order_item.save()
        
+
+        if copun!=None and copun.active:
+            
+            price_condition = copun.price_condition
+            discount = copun.discount_in_percentage
+            if price>=price_condition:
+                price-=(price*(discount/100))
         obj.total_price = price
         obj.address = data['address']
         obj.phone = data['phone']
+        obj.delevary_location = delevary
+        obj.cupon = copun
         obj.save()
         obj_ser = OrderSerializer(obj)
 

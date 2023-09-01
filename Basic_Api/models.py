@@ -125,3 +125,14 @@ class Review(models.Model):
         return self.r_name
 
 
+
+
+class Cupon(models.Model):
+    cupun_code = models.CharField(max_length=200,unique=True)
+    offer_name = models.CharField(max_length=500)
+    price_condition = models.IntegerField()
+    discount_in_percentage = models.IntegerField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.offer_name
