@@ -23,7 +23,7 @@ class SpacialofferSerializer(serializers.ModelSerializer):
 class ProductSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id','name','price','photo')
+        fields = ('id','name','price','photo','discription',)
 
 class HomepageSerializer(serializers.ModelSerializer):
     class Meta:
