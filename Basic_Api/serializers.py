@@ -72,11 +72,18 @@ class SubCategorySerializer(serializers.ModelSerializer):
         fields = ["id","name","image"]
 
 class CatagoryListSerializer(serializers.ModelSerializer):
-    
+    sub_category = serializers.SerializerMethodField()
     class Meta:
         model = Catagory
-        fields = ["id","name"]
+        fields = ["id","name","sub_category"]
 
+    def get_sub_category(self,instance):
+        sub = SubCatagory.objects.filter(category=instance)
+        if sub.exists():
+            ser = SubCategorySerializer(sub,many=True)
+            return ser.data
+        else:
+            return None
 
 
 class CatagorySerializer(serializers.ModelSerializer):
