@@ -111,3 +111,25 @@ class GetOrder(APIView):
         return Response(ser.data)
 """
 
+class CheakCupon(APIView):
+
+    def get(self,request,format = None):
+        data = request.data
+
+        if 'cupon' not in data:
+            return Response({'error':'Which Copun You want to Cheak . mention in body'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        if 'total_price' not in data:
+            return Response({'error':'Please Provide Total Price'},status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        try:
+            copun = Cupon.objects.get(cupun_code=data['cupon'])
+        except(ObjectDoesNotExist):
+            return Response({'error':'no active cupon found'},status=status.HTTP_404_NOT_FOUND)
+        
+        total_price = data['total_price']
+
+        if copun.active and copun.price_condition <=total_price:
+            return Response({'Success':'you get some discount','discount':copun.discount_in_percentage},status=status.HTTP_200_OK)
+        else:
+            return Response({'error':'no active copun found Condition Dont match'},status=status.HTTP_404_NOT_FOUND)
