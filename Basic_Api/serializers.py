@@ -59,7 +59,7 @@ class HomepageSerializer(serializers.ModelSerializer):
 class ProductSerializerList(serializers.ModelSerializer):
     class Meta:
         model = Product
-        exclude = ('catagorys','discription','after_discount','colors','stock','total_review','sub_catagory',)
+        exclude = ('catagorys','after_discount','colors','stock','total_review','sub_catagory',)
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
