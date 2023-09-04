@@ -14,6 +14,12 @@ class Blog(models.Model):
         return f"{self.title} by {self.created_by.first_name} {self.created_by.last_name}"
     
 
+class Pages(models.Model):
+    blog = models.ForeignKey(Blog,on_delete=models.CASCADE)
+    page_no = models.IntegerField()
+    description = models.CharField(max_length=100000)
+    
+
 class Comment(models.Model):
     commented_by = models.ForeignKey(User,on_delete=models.CASCADE)
     blog = models.ForeignKey(Blog,on_delete=models.CASCADE)

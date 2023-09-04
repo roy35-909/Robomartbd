@@ -136,3 +136,25 @@ class Cupon(models.Model):
 
     def __str__(self) -> str:
         return self.offer_name
+    
+
+
+
+
+class OurClient(models.Model):
+    name = models.CharField(max_length=500)
+    logo = models.ImageField(upload_to='OurClient/',null=True,blank=True)
+    link = models.URLField()
+
+    def __str__(self) -> str:
+        return self.name
+    
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=500)
+    logo = models.ImageField(upload_to='OurSupplier/',null=True,blank=True)
+    link = models.URLField()
+
+    def __str__(self) -> str:
+        return self.name
+    

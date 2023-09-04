@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Catagory,Product,Homepage,SubCatagory
-from .serializers import ProductSerializer,CatagorySerializer,ProductSerializerList,HomepageSerializer,ProductSearchSerializer
+from .models import Catagory,Product,Homepage,SubCatagory,OurClient,Supplier
+from .serializers import ProductSerializer,CatagorySerializer,ProductSerializerList,HomepageSerializer,ProductSearchSerializer,OurCorporateClientSerializer,SupplierSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView,CreateAPIView,RetrieveAPIView,UpdateAPIView,DestroyAPIView
@@ -74,3 +74,19 @@ class ProductSrc(APIView):
         return Response(ser.data,status=status.HTTP_200_OK)
         # else:
         #     return Response({'error':'are you trying to stol our data :)'},status=status.HTTP_401_UNAUTHORIZED)
+
+class CorporateClient(APIView):
+    def get(self,request):
+        objj = OurClient.objects.all()
+        ser = OurCorporateClientSerializer(objj,many=True)
+        return Response(ser.data,status=status.HTTP_200_OK)
+
+
+class OurSupplier(APIView):
+    def get(self,request):
+        objj = Supplier.objects.all()
+        ser = SupplierSerializer(objj,many=True)
+        return Response(ser.data,status=status.HTTP_200_OK)
+
+
+

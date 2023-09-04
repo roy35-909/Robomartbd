@@ -113,7 +113,7 @@ class GetOrder(APIView):
 
 class CheakCupon(APIView):
 
-    def get(self,request,format = None):
+    def post(self,request,format = None):
         data = request.data
 
         if 'cupon' not in data:
@@ -133,3 +133,4 @@ class CheakCupon(APIView):
             return Response({'Success':'you get some discount','discount':copun.discount_in_percentage},status=status.HTTP_200_OK)
         else:
             return Response({'error':'no active copun found Condition Dont match'},status=status.HTTP_404_NOT_FOUND)
+

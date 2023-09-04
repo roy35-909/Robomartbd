@@ -10,5 +10,8 @@ urlpatterns = [
     path('products', ProductSrc.as_view()),
     path('auth/',include('djoser.urls')),
     path('auth/',include('djoser.urls.jwt')),
+    path('our_client',CorporateClient.as_view()),
+    path('our_supplier',OurSupplier.as_view()),
+
     
 ]

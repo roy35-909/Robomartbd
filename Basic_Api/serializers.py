@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db.models import QuerySet
 from Basic_Api.models import User
 from rest_framework.fields import empty
-from .models import Product,Catagory,Homepage,Homeslider,Spacialoffer,SubCatagory
+from .models import Product,Catagory,Homepage,Homeslider,Spacialoffer,SubCatagory,OurClient,Supplier
 from djoser.serializers import UserCreateSerializer
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -102,7 +102,7 @@ class CatagorySerializer(serializers.ModelSerializer):
         
         category_serializer = ProductSerializerList(categories, many=True)
         data+=category_serializer.data
-        return data[:5]
+        return data[:7]
     class Meta:
         model = Catagory
         fields = ["id","name","image","product","sub_category"]
@@ -113,3 +113,18 @@ class CatagorySerializer(serializers.ModelSerializer):
             return ser.data
         else:
             return None
+
+
+class OurCorporateClientSerializer(serializers.Serializer):
+
+    class Meta:
+        model = OurClient
+
+        fields = '__all__'
+
+class SupplierSerializer(serializers.Serializer):
+
+    class Meta:
+        model = Supplier
+
+        fields = '__all__'
