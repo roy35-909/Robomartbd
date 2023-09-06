@@ -2,13 +2,22 @@ from rest_framework import serializers
 from django.db.models import QuerySet
 from Basic_Api.models import User
 from rest_framework.fields import empty
-from .models import Product,Catagory,Homepage,Homeslider,Spacialoffer,SubCatagory,OurClient,Supplier
+from .models import Product,Catagory,Homepage,Homeslider,Spacialoffer,SubCatagory,OurClient,Supplier,ProductMedia
 from djoser.serializers import UserCreateSerializer
+from django.contrib.auth.password_validation import validate_password
+from django.core import exceptions as django_exceptions
+from rest_framework.settings import api_settings
+from django.contrib.auth import authenticate, get_user_model
 
-class UserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializers(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = ('id','email','first_name','last_name','password')
+        fields = ('id','email','first_name','last_name','password','balance','phone',)
+
+    def update(self, instance, validated_data):
+        # Somehow save instance with new quiz_data
+        print(validated_data)
+        return instance
 
 
 
@@ -61,10 +70,22 @@ class ProductSerializerList(serializers.ModelSerializer):
         model = Product
         exclude = ('catagorys','after_discount','colors','stock','total_review','sub_catagory',)
 
+
+class ProductMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMedia
+        fields = '__all__'
+
 class ProductSerializer(serializers.ModelSerializer):
+    media = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = '__all__'
+    def get_media(self,instance):
+        obj = ProductMedia.objects.filter(product = instance)
+        ser = ProductMediaSerializer(obj,many=True)
+        return ser.data
+
 
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -115,16 +136,22 @@ class CatagorySerializer(serializers.ModelSerializer):
             return None
 
 
-class OurCorporateClientSerializer(serializers.Serializer):
+class OurCorporateClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OurClient
 
         fields = '__all__'
 
-class SupplierSerializer(serializers.Serializer):
+class SupplierSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Supplier
 
         fields = '__all__'
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ("first_name","last_name","balance","address","email","phone",)

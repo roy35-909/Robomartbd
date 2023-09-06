@@ -154,9 +154,10 @@ USE_TZ = True
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {
-        'user_create': 'Basic_Api.serializers.UserCreateSerializer',
-        'user': 'Basic_Api.serializers.UserCreateSerializer',
+        'user_create': 'Basic_Api.serializers.UserCreateSerializers',
+        'user': 'Basic_Api.serializers.UserCreateSerializers',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'user_create_password_retype':'Basic_Api.serializers.UserCreateSerializers',
     },
     'LOGIN_FIELD':'email',
     'USER_CREATE_PASSWORD_RETYPE':True,

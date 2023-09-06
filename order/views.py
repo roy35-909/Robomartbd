@@ -32,6 +32,17 @@ class GetOrder(APIView):
         if "cupon" not in data:
             return Response({'error':'Unvalid Body Please provide cupon info ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
 
+
+
+        if "payment_method" not in data:
+            return Response({'error':'Unvalid Body Please provide payment Method ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        if "payment_id" not in data:
+            return Response({'error':'Unvalid Body Please provide payment id ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        if "payment_number" not in data:
+            return Response({'error':'Unvalid Body Please provide payment_number ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        if "billing_option" not in data:
+            return Response({'error':'Unvalid Body Please provide Billing Options ..'},status=status.HTTP_406_NOT_ACCEPTABLE)
+
         price = 0
         try:
             delevary = Delivary.objects.get(code=data['delevary'])
@@ -86,8 +97,42 @@ class GetOrder(APIView):
             
             price_condition = copun.price_condition
             discount = copun.discount_in_percentage
+
             if price>=price_condition:
-                price-=(price*(discount/100))
+                price-= discount
+
+        if data['billing_option'] == "BALANCE":
+            if request.user.balance >= price:
+                obj.payment_method = "BALANCE"
+                obj.is_payment_done = True
+                user = User.objects.get(email=request.user.email)
+                obj.billing_option = "BALANCE"
+                user.balance-=price
+                user.save()
+            
+            else:
+                obj.delete()
+                return Response({'error':f'You dont have {price} TK balance .'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        elif data['billing_option'] == "MANUAL":
+            if data['payment_id'] == None:
+                obj.delete()
+                return Response({'error':'You want to manual Payment But You do not provide any payment id'},status=status.HTTP_406_NOT_ACCEPTABLE)
+            if data['payment_method'] == None:
+                obj.delete()
+                return Response({'error':'You want to manual Payment But You do not provide any payment method'},status=status.HTTP_406_NOT_ACCEPTABLE)
+            if data['payment_number'] == None:
+                obj.delete()
+                return Response({'error':'You want to manual Payment But You do not provide any payment number'},status=status.HTTP_406_NOT_ACCEPTABLE)        
+
+            obj.billing_option = "MANUAL"
+            obj.payment_id = data['payment_id']
+            obj.payment_method = data['payment_method']
+            obj.payment_number = data['payment_number']
+
+        else:
+            pass
+                
         obj.total_price = price
         obj.address = data['address']
         obj.phone = data['phone']
@@ -133,4 +178,5 @@ class CheakCupon(APIView):
             return Response({'Success':'you get some discount','discount':copun.discount_in_percentage},status=status.HTTP_200_OK)
         else:
             return Response({'error':'no active copun found Condition Dont match'},status=status.HTTP_404_NOT_FOUND)
+
 

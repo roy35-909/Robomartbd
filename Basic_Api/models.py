@@ -37,6 +37,8 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     balance = models.IntegerField(default=0)
     balance_ref = models.CharField(max_length=500,null=True,blank=True)
+    phone = models.CharField(max_length=18,null=True,blank=True)
+    address = models.CharField(max_length=1000,null=True,blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name','last_name']
 
@@ -114,6 +116,17 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class ProductMedia(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to='All_Product_Additional_Photo/')
+
+    def __str__(self) -> str:
+        return self.product.name
+
+
+
 
 
 class Review(models.Model):

@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from .models import Catagory,Product,Homepage,SubCatagory,OurClient,Supplier
-from .serializers import ProductSerializer,CatagorySerializer,ProductSerializerList,HomepageSerializer,ProductSearchSerializer,OurCorporateClientSerializer,SupplierSerializer
+from .models import Catagory,Product,Homepage,SubCatagory,OurClient,Supplier,User
+from .serializers import ProductSerializer,CatagorySerializer,ProductSerializerList,HomepageSerializer,ProductSearchSerializer,OurCorporateClientSerializer,SupplierSerializer,ProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView,CreateAPIView,RetrieveAPIView,UpdateAPIView,DestroyAPIView
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticated
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class CatagoryList(ListAPIView):
     queryset = Catagory.objects.all()
@@ -88,5 +91,47 @@ class OurSupplier(APIView):
         ser = SupplierSerializer(objj,many=True)
         return Response(ser.data,status=status.HTTP_200_OK)
 
+class Profile(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        try:
+            
+            objj = User.objects.get(email=request.user.email)
+            
+        except (ObjectDoesNotExist):
+            return Response({'error':'User Does Not Exist'},status=status.HTTP_404_NOT_FOUND)
+        ser = ProfileSerializer(objj,many = False)
+        return Response(ser.data,status=status.HTTP_200_OK)
+    
+    def post(self,request):
+
+        data = request.data
+        user = User.objects.get(email=request.user.email)
+        message = ""
+        if 'phone' in data:
+            user.phone = data['phone']
+            message+=" Updated Phone"
+
+        if 'address' in data:
+            user.address = data['address']
+            message+=" Updated address"
+
+        if 'first_name' in data:
+            user.first_name = data['first_name']
+            message+=" Updated first_name"
+
+        if 'last_name' in data:
+            user.last_name = data['last_name']
+            message+=" Updated last_name"
+
+        
+        if message=="":
+            return Response({"error":"Provide some Data"},status=status.HTTP_406_NOT_ACCEPTABLE)
+        user.save()
+        return Response({"success":message},status=status.HTTP_201_CREATED)
+
+
+
+        
 
 

@@ -15,6 +15,11 @@ class Delivary(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     is_served = models.BooleanField(default=False)
+    is_payment_done = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=100,null=True,blank=True)
+    payment_number = models.CharField(max_length=18,null=True,blank=True)
+    payment_id = models.CharField(max_length=300,null=True,blank=True)
+
     order_date = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField(blank=True,null=True)
     address = models.TextField(max_length=500,null=True,blank=True)
