@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'froala_editor',
     'Basic_Api',
     'cart',
     'rest_framework',
@@ -72,7 +73,7 @@ ROOT_URLCONF = 'Robomartbd.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +136,9 @@ SIMPLE_JWT = {
 }
 
 
+FRAOLA_EDITOR_THIRD_PARTY = ('codeInsert')
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -174,9 +178,11 @@ MEDIA_DIR = BASE_DIR/"media"
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = "/uploads/"
 STATIC_URL = 'static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = BASE_DIR / '/static/'
 import os
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+print(BASE_DIR)
+print("From settings")
+STATICFILES_DIRS =[BASE_DIR / 'static/' ] 
 AUTH_USER_MODEL = 'Basic_Api.User'
 
 AUTHENTICATION_BACKENDS = [

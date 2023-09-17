@@ -13,6 +13,7 @@ urlpatterns = [
     path('our_client',CorporateClient.as_view()),
     path('our_supplier',OurSupplier.as_view()),
     path('profile',Profile.as_view()),
+    path('test',PostView.as_view()),
 
     
 ]

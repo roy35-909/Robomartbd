@@ -14,8 +14,11 @@ class Delivary(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+
     is_served = models.BooleanField(default=False)
     is_payment_done = models.BooleanField(default=False)
+
+    billing_option = models.CharField(max_length=100,default="CASH_ON_DELIVERY")
     payment_method = models.CharField(max_length=100,null=True,blank=True)
     payment_number = models.CharField(max_length=18,null=True,blank=True)
     payment_id = models.CharField(max_length=300,null=True,blank=True)
@@ -24,9 +27,14 @@ class Order(models.Model):
     total_price = models.IntegerField(blank=True,null=True)
     address = models.TextField(max_length=500,null=True,blank=True)
     phone = models.CharField(max_length=15,null=True,blank=True)
+
     cupon = models.ForeignKey(Cupon,on_delete=models.PROTECT,null=True,blank=True)
+
+
     delevary_location = models.ForeignKey(Delivary,on_delete=models.PROTECT,null=True,blank=True)
     price_after_add_copun = models.IntegerField(null=True,blank=True)
+
+
     def __str__(self) -> str:
         return f"{self.user.email} => is_served: {self.is_served} => price : {self.total_price}"
 

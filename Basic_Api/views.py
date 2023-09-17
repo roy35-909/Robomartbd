@@ -133,5 +133,11 @@ class Profile(APIView):
 
 
         
-
+class PostView(APIView):
+    def post(self,request,format = None):
+        data = request.data
+        
+        print(data)
+        print(type(data))
+        return Response({'msg':'hello'})
 

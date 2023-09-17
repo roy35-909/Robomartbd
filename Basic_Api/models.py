@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser,AbstractUser
-
 #custom user manager
-
+from froala_editor.fields import FroalaField
+from froala_editor.widgets import FroalaEditor
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -60,6 +60,47 @@ class User(AbstractUser):
     objects = UserManager()
 
 
+class MyFroalaEditor(FroalaEditor):
+    def trigger_froala(self, el_id, options):
+
+        str = """
+        <script>
+        FroalaEditor.DefineIcon('insertCodeBlock', {
+        NAME: 'code',
+        SVG_KEY: "codeView",
+        });
+        FroalaEditor.RegisterCommand ('insertCodeBlock', {
+        title: 'Insert Code',
+        icon: 'insertCodeBlock',
+        focus: true,
+        undo: true,
+        refreshAfterCallback: true,
+        callback: function () {
+          // Insert the code section where the cursor is
+          this.html.insert('<div class="code_area"><pre><code> </code></pre></div></br>');
+          this.event.focus();
+        },
+      });
+            new FroalaEditor('#%s',%s)
+        </script>""" % (el_id, options)
+        return str
+
+
+class MyFroalaField(FroalaField):
+
+    def __init__(self, *args, **kwargs):
+        super(MyFroalaField, self).__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        if self.use_froala:
+            widget = MyFroalaEditor(options=self.options, theme=self.theme, plugins=self.plugins,
+                                  image_upload=self.image_upload,
+                                  file_upload=self.file_upload, third_party=self.third_party)
+
+        defaults = {'widget': widget}
+        defaults.update(kwargs)
+        return super(FroalaField, self).formfield(**defaults)
+
     
 
 class Homepage(models.Model):
@@ -99,6 +140,31 @@ class SubCatagory(models.Model):
         return self.name
 
 class Product(models.Model):
+
+    op = {'options':{
+    
+    "toolbarButtons": [[
+            "bold",
+            "italic",
+            "underline",
+            "strikeThrough",
+            "subscript",
+            "superscript",
+          ], [
+            "fontFamily",
+            "fontSize",
+            "textColor",
+            "backgroundColor",
+            "inlineStyle",
+            "paragraphStyle",
+            "paragraphFormat",
+            
+          ],["align", "formatOL", "formatUL", "outdent", "indent",],"-",["insertLink", "insertImage", "insertVideo","insertCodeBlock"],["undo", "redo","fullscreen"],],
+
+
+    "icons" : {"insertCodeBlock":"<i class=\"fa fa-code\"></i>"}
+  }}
+    
     name = models.CharField(max_length=1000)
     price = models.IntegerField()
     discount = models.IntegerField()
@@ -110,9 +176,11 @@ class Product(models.Model):
     stock = models.IntegerField()
     total_review = models.IntegerField()
     in_stock = models.BooleanField(default=True)
-    catagorys = models.ManyToManyField(Catagory,null=True,blank=True)
-    sub_catagory = models.ManyToManyField(SubCatagory,null=True,blank=True)
+    catagorys = models.ManyToManyField(Catagory)
+    sub_catagory = models.ManyToManyField(SubCatagory)
     buying_price = models.IntegerField(null=True,blank=True)
+    product_discription = MyFroalaField(null = True, blank = True , **op)
+    product_tutorial = MyFroalaField(null = True, blank = True , **op)
 
     def __str__(self) -> str:
         return self.name
