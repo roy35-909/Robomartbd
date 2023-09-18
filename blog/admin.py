@@ -19,3 +19,5 @@ class BlogAdmin(admin.ModelAdmin):
 admin.site.register(Blog,BlogAdmin)
 admin.site.register(Comment)
 admin.site.register(Pages)
+admin.site.register(BlogCategory)
+admin.site.register(BlogTag)
