@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import *
 from .serializers import *
+from django.core.exceptions import ObjectDoesNotExist
 
+from rest_framework import status
 class GetComment(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,format = None):
@@ -32,12 +34,15 @@ class GetComment(APIView):
     
 class GetAllComment(APIView):
     permission_classes = []
-    def get(self,request,format = None):
-        data = request.data
-        blog = Blog.objects.get(id=data['blog'])
+    def get(self,request,pk,format = None):
+        
+        try:
+            blog = Blog.objects.get(id=pk)
+        except(ObjectDoesNotExist):
+            return Response({'error':'Blog not found by this id'})
         obj = Comment.objects.filter(blog=blog)
         ser = CommentSerializer(obj,many=True,context = {'request':request})
-        return Response(ser.data)
+        return Response(ser.data,status=status.HTTP_200_OK)
 
 
 
@@ -47,4 +52,29 @@ class GetAllBlog(APIView):
     def get(self,request,format = None):
         blog = Blog.objects.all()
         ser = BlogSerializer(blog,many = True, context = {'request':request})
-        return Response(ser.data)
+        return Response(ser.data,status=status.HTTP_200_OK)
+
+
+class GetBlog(APIView):
+    permission_classes = []
+
+    def get(self,request,pk,format = None):
+        try:
+            blog = Blog.objects.get(id=pk)
+        except(ObjectDoesNotExist):
+            return Response({'error':'Blog not found'},status=status.HTTP_404_NOT_FOUND)
+        ser = BlogSerializer(blog,context = {'request':request})
+        return Response(ser.data,status=status.HTTP_200_OK)
+    
+class GetBlogByCategory(APIView):
+    permission_classes = []
+
+    def get(self,request,pk,format = None):
+        try:
+            category = BlogCategory.objects.get(id=pk)
+        except(ObjectDoesNotExist):
+            return Response({'error':'Category Not Found by this id'},status=status.HTTP_404_NOT_FOUND)
+        
+        blog = Blog.objects.filter(category=category)
+        ser = BlogSerializer(blog,context = {'request':request})
+        return Response(ser.data,status=status.HTTP_200_OK)
