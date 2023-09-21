@@ -16,9 +16,22 @@ class ProductAdmin(admin.ModelAdmin):
     inlines=[MediaInline]
     class Meta:
         model = Product
+
+class SubCategoryInline(admin.TabularInline):
+    #content = admin.CharField(widget=FroalaEditor)
+    model = SubCatagory
+    extra = 1
+    class Media:
+        css={'all':['code.css']}
+         
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines=[SubCategoryInline]
+    class Meta:
+        model = Catagory
 admin.site.register(Product,ProductAdmin)
 admin.site.register(Review)
-admin.site.register(Catagory)
+admin.site.register(Catagory,CategoryAdmin)
 admin.site.register(Homepage)
 admin.site.register(Homeslider)
 admin.site.register(Spacialoffer)
