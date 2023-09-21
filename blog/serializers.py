@@ -1,20 +1,42 @@
 from rest_framework import serializers
 from django.db.models import QuerySet
 from rest_framework.fields import empty
-from .models import Comment,Blog,Pages
+from .models import Comment,Blog,Pages,BlogCategory,BlogTag
 from Basic_Api.serializers import UserCreateSerializer,ProductSerializerList
 
 class CommentSerializer(serializers.ModelSerializer):
     commented_by = UserCreateSerializer(many=False)
+    is_my_comment = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = '__all__'
+
+    def get_is_my_comment(self,instance):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        if user!=None and instance.commented_by == user:
+            return "true"
+        else:
+            return "false"
 
 class PagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pages
         fields = '__all__'
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogTag
+        fields = '__all__'
+
+
+class BlogCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = '__all__'
 
 
 class BlogSerializer(serializers.ModelSerializer):
