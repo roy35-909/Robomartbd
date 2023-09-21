@@ -53,7 +53,7 @@ class GetComment(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,format = None):
         obj = Comment.objects.filter(commented_by=request.user)  
-        ser = CommentSerializer(obj,many = True)
+        ser = CommentSerializer(obj,many = True,context={'request':request})
         return Response(ser.data)
 
     def post(self,request,format = None):
@@ -61,7 +61,7 @@ class GetComment(APIView):
         blog = Blog.objects.get(id = data['blog'])
         obj = Comment(commented_by=request.user,blog=blog,comment=data['comment'])
         obj.save()
-        obj_ser = CommentSerializer(obj)
+        obj_ser = CommentSerializer(obj,context={'request':request})
         return Response(obj_ser.data)
     
     def delete(self,request,format = None):
@@ -99,9 +99,9 @@ class GetAllBlog(APIView,PaginationHandlerMixin):
         print(page)
         if page is not None:
             print("Roy")
-            serializer = self.get_paginated_response(self.serializer_class(page,many=True).data)
+            serializer = self.get_paginated_response(self.serializer_class(page,many=True,context={'request':request}).data)
         else:
-            serializer = self.serializer_class(blog, many=True)
+            serializer = self.serializer_class(blog, many=True,context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -131,7 +131,7 @@ class GetBlogByCategory(APIView,PaginationHandlerMixin):
         page = self.paginate_queryset(blog)
         if page is not None:
             
-            serializer = self.get_paginated_response(self.serializer_class(page,many=True).data)
+            serializer = self.get_paginated_response(self.serializer_class(page,many=True,context={'request':request}).data)
         else:
             serializer = self.serializer_class(blog, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -17,7 +17,7 @@ class GetCartProducts(APIView):
             cart = Cart(user=request.user,count=0,price=0)
             cart.save()
         # Need to Do Cart price validationnn...
-        cart_ser = CartSerializerList(cart)
+        cart_ser = CartSerializerList(cart,context={'request':request})
         return Response(cart_ser.data,status=status.HTTP_200_OK)
     
     def post(self,request,format = None):
@@ -43,14 +43,14 @@ class GetCartProducts(APIView):
             
             cart.price+=(product.price*data["quantity"])
             cart.save()
-            ser = CartSerializerList(cart)
+            ser = CartSerializerList(cart,context={'request':request})
             return Response(ser.data,status=status.HTTP_201_CREATED)
         cart.count+=1
         cart.price+=(product.price*data["quantity"])
         cart.save()
         cart_item = CartItem(product=product,quantity=data["quantity"],cart = cart)
         cart_item.save()
-        ser = CartSerializerList(cart)
+        ser = CartSerializerList(cart,context={'request':request})
         return Response(ser.data,status=status.HTTP_201_CREATED)
     
     def delete(self,request,format = None):

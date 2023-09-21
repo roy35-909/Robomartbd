@@ -20,7 +20,7 @@ class HomepageView(APIView):
             homepage = Homepage.objects.get(key = 1010)
         except:
             return Response({'error':'Give us valid homepage key'},status=status.HTTP_400_BAD_REQUEST)
-        ser = HomepageSerializer(homepage,many=False)
+        ser = HomepageSerializer(homepage,many=False,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
     
 class GetCatagoryProducts(APIView):
@@ -37,10 +37,10 @@ class GetCatagoryProducts(APIView):
                 
                 for category in sub_categorys:
                     sub_products = category.product_set.all()
-                    ser_sub_data = ProductSerializerList(sub_products,many=True)
+                    ser_sub_data = ProductSerializerList(sub_products,many=True,context={'request':request})
                     sub_categorys_ser_data+=ser_sub_data.data
 
-            ser = ProductSerializerList(query,many = True)
+            ser = ProductSerializerList(query,many = True,context={'request':request})
             data = ser.data + sub_categorys_ser_data
 
             return Response(data,status=status.HTTP_200_OK)
@@ -51,7 +51,7 @@ class GetCatagoryProducts(APIView):
             except:
                 return Response({"error":"Please Give an valid Subcategory id"},status=status.HTTP_404_NOT_FOUND)
             query = products.product_set.all()
-            ser = ProductSerializerList(query,many = True)
+            ser = ProductSerializerList(query,many = True,context={'request':request})
             return Response(ser.data,status=status.HTTP_200_OK)
         else:
             return Response({"error":"You Miss valid Flag :)"},status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -62,7 +62,7 @@ class GetProduct(APIView):
             product = Product.objects.get(id = pk)
         except:
             return Response({'error':'Product Not Found'},status=status.HTTP_404_NOT_FOUND)
-        ser = ProductSerializer(product,many=False)
+        ser = ProductSerializer(product,many=False,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
 
 
@@ -73,7 +73,7 @@ class ProductSrc(APIView):
         #if origin!= None and origin==allowed[0]:
         #print(origin)
         objj = Product.objects.all()
-        ser = ProductSearchSerializer(objj,many=True)
+        ser = ProductSearchSerializer(objj,many=True,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
         # else:
         #     return Response({'error':'are you trying to stol our data :)'},status=status.HTTP_401_UNAUTHORIZED)
@@ -81,14 +81,14 @@ class ProductSrc(APIView):
 class CorporateClient(APIView):
     def get(self,request):
         objj = OurClient.objects.all()
-        ser = OurCorporateClientSerializer(objj,many=True)
+        ser = OurCorporateClientSerializer(objj,many=True,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
 
 
 class OurSupplier(APIView):
     def get(self,request):
         objj = Supplier.objects.all()
-        ser = SupplierSerializer(objj,many=True)
+        ser = SupplierSerializer(objj,many=True,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
 
 class Profile(APIView):
@@ -100,7 +100,7 @@ class Profile(APIView):
             
         except (ObjectDoesNotExist):
             return Response({'error':'User Does Not Exist'},status=status.HTTP_404_NOT_FOUND)
-        ser = ProfileSerializer(objj,many = False)
+        ser = ProfileSerializer(objj,many = False,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
     
     def post(self,request):
