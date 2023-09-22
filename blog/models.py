@@ -76,6 +76,8 @@ class MyFroalaField(FroalaField):
 class Pages(models.Model):
     blog = models.ForeignKey(Blog,on_delete=models.CASCADE)
     page_no = models.IntegerField()
+    # page title
+    page_title = models.CharField(max_length=3000,null=True,blank=True)
     op = {'options':{
     
     "toolbarButtons": [[
