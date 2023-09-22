@@ -51,12 +51,9 @@ class GetFeedback(APIView):
 #Get All FeedBack  
 class GetAllFeedback(APIView):
     permission_classes = []
-    def get(self,request,format = None):
-        data = request.data
-        if 'product' not in data:
-            return Response({'error': 'did you give product id ?'},status=status.HTTP_406_NOT_ACCEPTABLE)
+    def get(self,request,pk,format = None):
         try:
-            product = Product.objects.get(id=data['product'])
+            product = Product.objects.get(id=pk)
         except(ObjectDoesNotExist):
             return Response({'error': 'The Product Does not exist?'},status=status.HTTP_404_NOT_FOUND)
         obj = Feedback.objects.filter(product=product)
