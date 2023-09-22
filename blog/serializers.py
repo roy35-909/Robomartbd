@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.db.models import QuerySet
 from rest_framework.fields import empty
-from .models import Comment,Blog,Pages,BlogCategory,BlogTag
+from .models import Comment,Blog,Pages,BlogCategory,BlogTag,BlogItems
 from Basic_Api.serializers import UserCreateSerializer,ProductSerializerList
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -38,11 +38,16 @@ class BlogCategorySerializer(serializers.ModelSerializer):
         model = BlogCategory
         fields = '__all__'
 
+class BlogItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogItems
+        fields = '__all__'
 
 class BlogSerializer(serializers.ModelSerializer):
     created_by = UserCreateSerializer(many=False)
     related_Product = ProductSerializerList(many=True)
     pages = serializers.SerializerMethodField()
+    items = serializers.SerializerMethodField()
     class Meta:
         model = Blog
         fields = '__all__'
@@ -53,5 +58,10 @@ class BlogSerializer(serializers.ModelSerializer):
         ser = PagesSerializer(objj,many = True)
         return ser.data
 
+    def get_items(self,instance):
+        objj = BlogItems.objects.filter(blog=instance)
+        ser = BlogItemsSerializer(objj,many=True)
+
+        return ser.data
 
 
