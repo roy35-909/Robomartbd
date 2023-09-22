@@ -4,7 +4,7 @@ from froala_editor.widgets import FroalaEditor
 class PageInline(admin.TabularInline):
     #content = admin.CharField(widget=FroalaEditor)
     model = Pages
-    extra = 0
+    extra = 1
     class Media:
         js = ['code_insert.js']
         css={'all':['code.css']}

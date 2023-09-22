@@ -47,15 +47,6 @@ class MyFroalaEditor(FroalaEditor):
 
         str = """
         <script>
-        (function($) {
-    $(document).on('formset:added', function(event, $row, formsetName) {
-        $row.find('textarea').each(function() {
-            $(this).prev().remove();
-            jQuery(this).froalaEditor();
-        });
-    });
-    })(django.jQuery);
-
         FroalaEditor.DefineIcon('insertCodeBlock', {
         NAME: 'code',
         SVG_KEY: "codeView",
