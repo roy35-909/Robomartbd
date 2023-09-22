@@ -19,10 +19,13 @@ class BlogTag(models.Model):
         return self.tag_name
     
 
+    
+
 class Blog(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField(max_length=6000,verbose_name="Write Your Description")
-    related_Product = models.ManyToManyField(Product)
+    related_Product = models.ManyToManyField(Product,null=True,blank=True)
+    
     image = models.ImageField(upload_to='Blog/',null=True,blank=True)
     category = models.ManyToManyField(BlogCategory)
     tag = models.ManyToManyField(BlogTag)
@@ -30,12 +33,29 @@ class Blog(models.Model):
     
     def __str__(self):
         return f"{self.title} by {self.created_by.first_name} {self.created_by.last_name}"
-    
+
+
+class BlogItems(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    blog = models.ForeignKey(Blog,on_delete=models.CASCADE,null=True,blank=True)
+    def __str__(self) -> str:
+        return self.product.name
+
 class MyFroalaEditor(FroalaEditor):
     def trigger_froala(self, el_id, options):
 
         str = """
         <script>
+        (function($) {
+    $(document).on('formset:added', function(event, $row, formsetName) {
+        $row.find('textarea').each(function() {
+            $(this).prev().remove();
+            jQuery(this).froalaEditor();
+        });
+    });
+    })(django.jQuery);
+
         FroalaEditor.DefineIcon('insertCodeBlock', {
         NAME: 'code',
         SVG_KEY: "codeView",
