@@ -39,6 +39,7 @@ class BlogCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BlogItemsSerializer(serializers.ModelSerializer):
+    product = ProductSerializerList()
     class Meta:
         model = BlogItems
         fields = '__all__'
