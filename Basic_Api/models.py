@@ -166,6 +166,7 @@ class Product(models.Model):
   }}
     
     name = models.CharField(max_length=1000)
+    product_code = models.CharField(max_length=200,null=True,blank=True)
     price = models.IntegerField()
     discount = models.IntegerField()
     after_discount = models.IntegerField()
