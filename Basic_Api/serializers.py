@@ -45,22 +45,22 @@ class HomepageSerializer(serializers.ModelSerializer):
 
     def get_homeslider(self,obj):
         homeslider = Homeslider.objects.filter(isactive = True)
-        homeslider_serializer = HomesliderSerializer(homeslider,many = True)
+        homeslider_serializer = HomesliderSerializer(homeslider,many = True, context={'request':self.context.get('request')})
 
         return homeslider_serializer.data
     
     def get_spacialoffer(self,obj):
         spacialoffer = Spacialoffer.objects.filter(isactive = True)
-        spacialoffer_serializer = SpacialofferSerializer(spacialoffer,many = True)
+        spacialoffer_serializer = SpacialofferSerializer(spacialoffer,many = True, context={'request':self.context.get('request')})
         return spacialoffer_serializer.data
     
     def get_catagory(self,obj):
         catagory = Catagory.objects.filter(show_on_home = True)
-        product_serializer = CatagorySerializer(catagory,many = True)
+        product_serializer = CatagorySerializer(catagory,many = True, context={'request':self.context.get('request')})
         return product_serializer.data
     def get_catagorylist(self,obj ):
         catagorylist = Catagory.objects.all()
-        catagorylist_serializer = CatagoryListSerializer(catagorylist,many = True)
+        catagorylist_serializer = CatagoryListSerializer(catagorylist,many = True, context={'request':self.context.get('request')})
         return catagorylist_serializer.data
 
 
@@ -83,7 +83,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
     def get_media(self,instance):
         obj = ProductMedia.objects.filter(product = instance)
-        ser = ProductMediaSerializer(obj,many=True)
+        ser = ProductMediaSerializer(obj,many=True, context={'request':self.context.get('request')})
         return ser.data
 
 
@@ -101,7 +101,7 @@ class CatagoryListSerializer(serializers.ModelSerializer):
     def get_sub_category(self,instance):
         sub = SubCatagory.objects.filter(category=instance)
         if sub.exists():
-            ser = SubCategorySerializer(sub,many=True)
+            ser = SubCategorySerializer(sub,many=True, context={'request':self.context.get('request')})
             return ser.data
         else:
             return None
@@ -118,10 +118,10 @@ class CatagorySerializer(serializers.ModelSerializer):
         if sub_cata.exists():
             for i in sub_cata:
                 o = i.product_set.all()
-                ser_data = ProductSerializerList(o,many=True)
+                ser_data = ProductSerializerList(o,many=True,context={'request':self.context.get('request')})
                 data+=ser_data.data
         
-        category_serializer = ProductSerializerList(categories, many=True)
+        category_serializer = ProductSerializerList(categories, many=True, context={'request':self.context.get('request')})
         data+=category_serializer.data
         return data[:7]
     class Meta:
@@ -130,7 +130,7 @@ class CatagorySerializer(serializers.ModelSerializer):
     def get_sub_category(self,instance):
         sub = SubCatagory.objects.filter(category=instance)
         if sub.exists():
-            ser = SubCategorySerializer(sub,many=True)
+            ser = SubCategorySerializer(sub,many=True, context={'request':self.context.get('request')})
             return ser.data
         else:
             return None

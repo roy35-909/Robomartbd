@@ -161,3 +161,22 @@ class GetTag(APIView):
         
         ser = TagSerializer(tag,many=True,context = {'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
+    
+class GetBlogByTag(APIView,PaginationHandlerMixin):
+    permission_classes = []
+    pagination_class = BasicPagination
+    serializer_class = BlogSerializer
+    def get(self,request,pk,format = None,*args, **kwargs):
+        try:
+            tag = BlogTag.objects.get(id=pk)
+        except(ObjectDoesNotExist):
+            return Response({'error':'tag Not Found by this id'},status=status.HTTP_404_NOT_FOUND)
+        
+        blog = Blog.objects.filter(tag=tag)
+        page = self.paginate_queryset(blog)
+        if page is not None:
+            
+            serializer = self.get_paginated_response(self.serializer_class(page,many=True,context={'request':request}).data)
+        else:
+            serializer = self.serializer_class(blog, many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
