@@ -96,7 +96,7 @@ class Pages(models.Model):
             "paragraphStyle",
             "paragraphFormat",
             
-          ],["align", "formatOL", "formatUL", "outdent", "indent",],"-",["insertLink", "insertImage", "insertVideo","insertCodeBlock"],["undo", "redo"],],
+          ],["align", "formatOL", "formatUL", "outdent", "indent",],"-",["insertLink", "insertImage", "insertVideo","insertCodeBlock"],["undo", "redo","fullscreen"],],
 
 
     "icons" : {"insertCodeBlock":"<i class=\"fa fa-code\"></i>"}
