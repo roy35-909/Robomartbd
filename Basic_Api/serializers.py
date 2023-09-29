@@ -151,7 +151,16 @@ class SupplierSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
-        fields = ("first_name","last_name","balance","address","email","phone",)
+        fields = ("first_name","last_name","balance","address","email","phone","role",)
+
+    def get_role(self,instance):
+
+        if instance.is_superuser or instance.is_staff:
+            return "Admin"
+        else:
+            return "Customer"
+        

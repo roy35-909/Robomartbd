@@ -15,8 +15,10 @@ class Delivary(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
 
-    is_served = models.BooleanField(default=False)
-    is_payment_done = models.BooleanField(default=False)
+    is_served = models.BooleanField(default=False) #step :2
+    is_payment_done = models.BooleanField(default=False) #step :1
+    is_sell_done = models.BooleanField(default=False) #step :3
+    
 
     billing_option = models.CharField(max_length=100,default="CASH_ON_DELIVERY")
     payment_method = models.CharField(max_length=100,null=True,blank=True)

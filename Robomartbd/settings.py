@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'djoser',
     'order',
     'feedback',
-    'blog'
+    'blog',
+    'admin_management',
     
 ]
 

@@ -26,6 +26,7 @@ urlpatterns = [
     path('feedback/', include('feedback.urls')),
     path('blog/', include('blog.urls')),
     path('froala_editor/', include('froala_editor.urls')),
+    path('order_management/', include('admin_management.urls')),
     
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
