@@ -47,10 +47,14 @@ INSTALLED_APPS = [
     'feedback',
     'blog',
     'admin_management',
+    'social_django',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist'
     
 ]
 
 MIDDLEWARE = [
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,6 +86,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -167,25 +173,34 @@ DJOSER = {
     'LOGIN_FIELD':'email',
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SEND_CONFIRMATION_EMAIL':False,
-    'TOKEN_MODEL':None
-
+    'TOKEN_MODEL':None,
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000',]
 }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_DIR = BASE_DIR/"media"
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = "/uploads/"
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / '/static/'
+STATIC_ROOT = '/static/'
 import os
-print(BASE_DIR)
-print("From settings")
+
 STATICFILES_DIRS =[BASE_DIR / 'static/' ] 
 AUTH_USER_MODEL = 'Basic_Api.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
 ]
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "56966543215-m1084vp6l5v5rce3cqe0q9gn7f2efuo8.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ["https://www.googleapis.com/auth/userinfo.email","https://www.googleapis.com/auth/userinfo.profile","openid"]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
