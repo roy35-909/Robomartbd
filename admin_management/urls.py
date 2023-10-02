@@ -13,6 +13,7 @@ path('get_served_order',ServedOrderManagement.as_view()),
 path('get_served_order/<int:pk>',ServedOrderManagement.as_view()),
 path('get_dashbord',DashbordData.as_view()),
 path('get_dashbord_yearly',DashbordDataYearly.as_view()),
+path('test_email', renderhtml),
 #  path('cheak_copun',CheakCupon.as_view()),
     
 ]

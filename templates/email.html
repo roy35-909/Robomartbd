@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        /* Define your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #00ad51;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .order-details {
+            margin: 20px 0;
+        }
+        .order-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .order-details th,
+        .order-details td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .order-details th {
+            background-color: #f2f2f2;
+        }
+        .delivery-info {
+            margin-top: 20px;
+        }
+        td{
+            text-align : center;
+        }
+        .imp{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2> <img src="https://robomartbd11.web.app/assets/logo.png" height="50" width="100" style="vertical-align: middle;"> Order Shipped </h2>
+        </div>
+        <div class="order-details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product.price }} BDT</td>
+                        <td>{{ item.price }} BDT</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="delivery-info">
+            <h2>Delivery Information</h2>
+            <p><strong>Delivery Address:</strong> {{ order.address }}</p>
+            <p><strong>Shipping Fee:</strong> ${{ order.delevary_location.price }}</p>
+            <p><strong>Phone Number:</strong> {{ order.phone }}</p>
+            {% if order.payment_method %}
+
+
+            <p><strong>Payment Method:</strong> {{ order.billing_option }}</p>
+
+            {%else%}
+
+            <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+            {%endif%}
+
+            {% if order.cupon%}
+            <p><strong>Applied Copun:</strong> {{ order.cupon.offer_name }} (<span class="imp">-{{order.cupon.discount_in_percentage}} TK </span> )</p>
+            {%else%}
+
+            {%endif%}
+            <p><strong>Total Price: </strong><span class="imp">{{ order.total_price }} BDT</span> </p>
+        </div>
+
+
+    </div>
+</body>
+</html>

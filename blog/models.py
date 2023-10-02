@@ -22,6 +22,7 @@ class BlogTag(models.Model):
     
 
 class Blog(models.Model):
+
     title = models.CharField(max_length=500)
     description = models.TextField(max_length=6000,verbose_name="Write Your Description")
     related_Product = models.ManyToManyField(Product,null=True,blank=True)

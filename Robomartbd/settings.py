@@ -204,3 +204,12 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ["https://www.googleapis.com/auth/userinfo.email","https://www.googleapis.com/auth/userinfo.profile","openid"]
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
+
+
+#Email Configuration
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 #465
+EMAIL_HOST_USER = 'roy35-909@diu.edu.bd'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = True

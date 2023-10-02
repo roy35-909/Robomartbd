@@ -11,6 +11,9 @@ from rest_framework import permissions
 from .models import Sell
 from datetime import timezone
 from datetime import datetime
+
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 class IsOrderManager(permissions.BasePermission):
     def has_permission(self, request, view):
         """
@@ -50,6 +53,7 @@ class OrderDetails(APIView):
 class PendingOrderManagement(APIView):
     permission_classes = [IsOrderManager]
     def get(self,request):
+
         objj = Order.objects.filter(is_payment_done = False)
         ser = OrderSerializer(objj,many = True)
         return Response(ser.data,status=status.HTTP_200_OK)
@@ -105,9 +109,18 @@ class ActiveOrderManagement(APIView):
         except(ObjectDoesNotExist):
             return Response({"error":"Object does not exist please cheak"})
         
+        items = OrderItem.objects.filter(order = objj)
         if data["flag"] == "served_done":
             objj.is_served = True
             objj.save()
+            send_mail(
+            "Your Order Details from Robomartbd",
+            "You ordered something",
+            "roy35-909@diu.edu.bd",
+            ['souravkumarroy77@gmail.com'],
+            fail_silently= False,
+            html_message=render_to_string('email.html',{'order':objj,'items':items})
+            )
             return self.get(request)
         else:
             return Response({"error":"You Provide wrong flag on wrong url please cheak"})
@@ -118,7 +131,7 @@ class ActiveOrderManagement(APIView):
 class ServedOrderManagement(APIView):
     permission_classes = [IsOrderManager]
     def get(self,request):
-        objj = Order.objects.filter(is_served = True,is_payment_done=True)
+        objj = Order.objects.filter(is_served = True,is_payment_done=True,is_sell_done = False)
         ser = OrderSerializer(objj,many = True)
 
         return Response(ser.data,status=status.HTTP_200_OK)
@@ -225,3 +238,15 @@ class DashbordDataYearly(APIView):
         return Response(ser.data,status=status.HTTP_201_CREATED)
 
 
+def renderhtml(request):
+    objj = Order.objects.get(id=34)
+    items = OrderItem.objects.filter(order = objj)
+    # send_mail(
+    #         "Your Order Details from Robomartbd",
+    #         "You order something",
+    #         "roy35-909@diu.edu.bd",
+    #         ['souravkumarroy77@gmail.com'],
+    #         fail_silently= False,
+    #         html_message=render_to_string('email.html',{'order':objj,'items':items})
+    #     )
+    return render(request,'email.html',context={'order':objj,'items':items})
