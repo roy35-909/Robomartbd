@@ -25,6 +25,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderDetailsSerializer(serializers.ModelSerializer):
     items = serializers.SerializerMethodField()
+    shiping = serializers.SerializerMethodField()
     class Meta:
         model = Order
         fields = '__all__'
@@ -34,5 +35,8 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
         print(objj)
         ser = OrderItemSerializer(objj,many = True,context=self._context)
         return ser.data
+    
+    def get_shiping(self,instance):
+        return instance.delevary_location.price
 
  

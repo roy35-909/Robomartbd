@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -174,7 +181,7 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SEND_CONFIRMATION_EMAIL':False,
     'TOKEN_MODEL':None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000',]
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/']
 }
 
 # Default primary key field type
