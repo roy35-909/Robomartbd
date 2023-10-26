@@ -219,5 +219,5 @@ FRONTEND_URL = 'http://localhost:8000'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 #465
 EMAIL_HOST_USER = 'roy35-909@diu.edu.bd'
-EMAIL_HOST_PASSWORD = 'Audityroy77'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True

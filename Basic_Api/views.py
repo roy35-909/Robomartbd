@@ -189,9 +189,10 @@ class RenewPassword(APIView):
             user = User.objects.get(email = email)
         except:
             return Response("User Not Registered")
-        
+        new_token = str(uuid.uuid4())
         if user.password_forget_token == token:
             user.set_password(data['new_password'])
+            user.password_forget_token = new_token
             user.save()
 
 
