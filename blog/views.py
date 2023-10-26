@@ -94,7 +94,25 @@ class GetAllBlog(APIView,PaginationHandlerMixin):
     permission_classes = []
 
     def get(self,request,format = None, *args, **kwargs):
-        blog = Blog.objects.all()
+        blog = Blog.objects.filter(is_tutorial = False)
+        page = self.paginate_queryset(blog)
+        print(page)
+        if page is not None:
+            print("Roy")
+            serializer = self.get_paginated_response(self.serializer_class(page,many=True,context={'request':request}).data)
+        else:
+            serializer = self.serializer_class(blog, many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class GetAllTutorial(APIView,PaginationHandlerMixin):
+    pagination_class = BasicPagination
+    serializer_class = BlogSerializer
+    permission_classes = []
+
+    def get(self,request,format = None, *args, **kwargs):
+        blog = Blog.objects.filter(is_tutorial = True)
         page = self.paginate_queryset(blog)
         print(page)
         if page is not None:

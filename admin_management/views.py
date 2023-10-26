@@ -19,10 +19,29 @@ class IsOrderManager(permissions.BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-
         if request.user.groups.filter(name="OrderManager").exists():
 
             return True
+        
+        
+        else:
+            return False
+        
+
+class IsOrderOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        """
+        Return `True` if permission is granted, `False` otherwise.
+        """
+        pk = view.kwargs.get('pk')
+        try:
+            order = Order.objects.get(id=pk)
+        except:
+            return False
+        if request.user.email == order.user.email:
+            return True
+        
+        
         else:
             return False
         
@@ -36,7 +55,7 @@ class AdminPermission(permissions.BasePermission):
     
 
 class OrderDetails(APIView):
-    permission_classes = [IsOrderManager]
+    permission_classes = [IsOrderManager | IsOrderOwner]
     def get(self,request,pk):
         try:
             objj = Order.objects.get(id=pk)
@@ -221,14 +240,13 @@ class DashbordDataYearly(APIView):
 
         objj = Sell.objects.filter(date__year = data["year"])
         for i in range(1,12):
-            print(i)
+
             data = objj.filter(date__month = i)
             this_month_sell = 0
             this_month_profit = 0
             if data.exists():
                 for j in data:
-                    orderitems = OrderItem.objects.filter(order = j.order)
-                    this_month_sell+=orderitems.count()
+                    this_month_sell+= j.total_price
                     this_month_profit+=j.total_profit
 
             o = YearlySellReport(month=array[i],sell=this_month_sell,profit=this_month_profit)

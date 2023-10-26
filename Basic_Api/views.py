@@ -8,8 +8,10 @@ from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
-
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+import uuid
+from django.conf import settings
 class CatagoryList(ListAPIView):
     queryset = Catagory.objects.all()
     serializer_class = CatagorySerializer
@@ -141,3 +143,66 @@ class PostView(APIView):
         print(type(data))
         return Response({'msg':'hello'})
 
+class ChangePassword(APIView):
+    def post(self,request,format = None):
+        data = request.data
+        
+        if 'email' not in data:
+
+            return Response({'error':'provide email please'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+
+        try:
+        
+            user = User.objects.get(email = data['email'])
+        except:
+
+            return Response("User Not Registered")
+        
+        token = str(uuid.uuid4())
+        user.password_forget_token = token
+        user.save()
+
+        link = settings.FRONTEND_URL+'/api/renew_password/'+token+'/'+user.email
+        send_mail(
+            "Change password Token ",
+            link,
+            "roy35-909@diu.edu.bd",
+            [user.email],
+            fail_silently= False,
+            
+        )
+
+        return Response({'msg':'Done'})
+    
+
+class RenewPassword(APIView):
+    def post(self,request,token,email,format = None):
+        data = request.data
+        
+        if 'new_password' not in data:
+
+            return Response({'error':'provide new password'},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        try:
+        
+            user = User.objects.get(email = email)
+        except:
+            return Response("User Not Registered")
+        
+        if user.password_forget_token == token:
+            user.set_password(data['new_password'])
+            user.save()
+
+
+        
+        send_mail(
+            "Password Reset Successfully",
+            "Your Account " + user.email + " password Renewed",
+            "roy35-909@diu.edu.bd",
+            [user.email],
+            fail_silently= False,
+            
+        )
+
+        return Response({'msg':'Done'})

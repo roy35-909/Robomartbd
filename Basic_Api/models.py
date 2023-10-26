@@ -39,6 +39,7 @@ class User(AbstractUser):
     balance_ref = models.CharField(max_length=500,null=True,blank=True)
     phone = models.CharField(max_length=18,null=True,blank=True)
     address = models.CharField(max_length=1000,null=True,blank=True)
+    password_forget_token = models.CharField(max_length=300,null=True,blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name','last_name']
 

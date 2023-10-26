@@ -15,6 +15,8 @@ urlpatterns = [
     path('our_supplier',OurSupplier.as_view()),
     path('profile',Profile.as_view()),
     path('test',PostView.as_view()),
+    path('change_password',ChangePassword.as_view()),
+    path('renew_password/<str:token>/<str:email>',RenewPassword.as_view()),
 
     
 ]

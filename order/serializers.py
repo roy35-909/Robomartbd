@@ -14,13 +14,18 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
-        fields = ('id','email','total_price','order_date','is_served','address','phone')
+        fields = ('id','email','total_price','order_date','is_served','is_payment_done','is_sell_done','address','phone')
 
     def get_email(self,instance):
 
         return instance.user.email
+    
+
+
+
 
 
 class OrderDetailsSerializer(serializers.ModelSerializer):

@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-!cn2_3og!nk#ggl-fu!!cj_*8(04qw#-o5sa1@$jibdvw#a%u)
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+os.environ.get
 
 # Application definition
 
@@ -181,7 +181,7 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SEND_CONFIRMATION_EMAIL':False,
     'TOKEN_MODEL':None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/']
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:3000/googleAuth','https://robomartbd11.web.app/googleAuth']
 }
 
 # Default primary key field type
@@ -214,9 +214,10 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name','last_name']
 
 
 #Email Configuration
+FRONTEND_URL = 'http://localhost:8000'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 #465
 EMAIL_HOST_USER = 'roy35-909@diu.edu.bd'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'Audityroy77'
 EMAIL_USE_TLS = True
