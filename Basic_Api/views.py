@@ -12,6 +12,13 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import uuid
 from django.conf import settings
+
+
+
+# from dj_rest_auth.registration.views import SocialLoginView
+# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+# from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
 class CatagoryList(ListAPIView):
     queryset = Catagory.objects.all()
     serializer_class = CatagorySerializer
@@ -207,3 +214,10 @@ class RenewPassword(APIView):
         )
 
         return Response({'msg':'Done'})
+
+
+
+# class GoogleLoginView(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+#     # callback_url = GOOGLE_REDIRECT_URL
+#     client_class = OAuth2Client

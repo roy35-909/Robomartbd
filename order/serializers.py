@@ -14,15 +14,20 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
-
+    items = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = ('id','email','total_price','order_date','is_served','is_payment_done','is_sell_done','address','phone')
+        fields = ('id','email','total_price','order_date','is_served','is_payment_done','is_sell_done','address','phone','items')
 
     def get_email(self,instance):
 
         return instance.user.email
     
+    def get_items(self,instance):
+
+        objj = OrderItem.objects.filter(order = instance)
+        ser = OrderItemSerializer(objj, many = True)
+        return ser.data
 
 
 

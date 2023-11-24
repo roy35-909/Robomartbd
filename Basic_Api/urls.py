@@ -16,7 +16,7 @@ urlpatterns = [
     path('profile',Profile.as_view()),
     path('test',PostView.as_view()),
     path('change_password',ChangePassword.as_view()),
-    path('renew_password/<str:token>/<str:email>',RenewPassword.as_view()),
-
+    path('renew_password/<str:email>/<str:token>',RenewPassword.as_view()),
+    # path("dj-rest-auth/google/login/", GoogleLoginView.as_view(), name="google_login")
     
 ]

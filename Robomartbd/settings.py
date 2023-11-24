@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-!cn2_3og!nk#ggl-fu!!cj_*8(04qw#-o5sa1@$jibdvw#a%u)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+handler404 = 'react.views.index'
 ALLOWED_HOSTS = ["*"]
 os.environ.get
 
@@ -56,7 +56,15 @@ INSTALLED_APPS = [
     'admin_management',
     'social_django',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'react',
+
+    # 'rest_framework.authtoken',
+    # 'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
     
 ]
 
@@ -71,6 +79,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
     'https://api.robomartbd.com',
@@ -85,7 +94,7 @@ ROOT_URLCONF = 'Robomartbd.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates/'],
+        'DIRS': [BASE_DIR / 'robomartBD-frontend/dist/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,6 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+
        
     ),
 }
@@ -181,7 +191,8 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE':True,
     'SEND_CONFIRMATION_EMAIL':False,
     'TOKEN_MODEL':None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:3000/googleAuth','https://robomartbd11.web.app/googleAuth']
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:8000/googleAuth/auth','https://robomartbd11.web.app/googleAuth/auth']
 }
 
 # Default primary key field type
@@ -193,11 +204,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_DIR = BASE_DIR/"media"
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = "/uploads/"
-STATIC_URL = 'static/'
-STATIC_ROOT = '/static/'
+STATIC_URL = 'assets/'
+STATIC_ROOT = '/assets/'
+
+
 import os
 
-STATICFILES_DIRS =[BASE_DIR / 'static/' ] 
+STATICFILES_DIRS =[BASE_DIR / 'robomartBD-frontend/dist/assets/' ] 
 AUTH_USER_MODEL = 'Basic_Api.User'
 
 AUTHENTICATION_BACKENDS = [
@@ -221,3 +234,6 @@ EMAIL_PORT = 587 #465
 EMAIL_HOST_USER = 'roy35-909@diu.edu.bd'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
+
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_VERIFICATION = "none"
